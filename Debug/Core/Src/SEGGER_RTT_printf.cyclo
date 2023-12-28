@@ -1,0 +1,5 @@
+../Core/Src/SEGGER_RTT_printf.c:117:13:_StoreChar	4
+../Core/Src/SEGGER_RTT_printf.c:142:13:_PrintUnsigned	20
+../Core/Src/SEGGER_RTT_printf.c:232:13:_PrintInt	25
+../Core/Src/SEGGER_RTT_printf.c:327:5:SEGGER_RTT_vprintf	30
+../Core/Src/SEGGER_RTT_printf.c:501:5:SEGGER_RTT_printf	1

@@ -1,0 +1,13 @@
+../Core/Src/hardware_interface.c:25:6:hw_set_led	1
+../Core/Src/hardware_interface.c:31:6:hw_toggle_led	1
+../Core/Src/hardware_interface.c:36:6:hw_enable_high_current_switch	1
+../Core/Src/hardware_interface.c:42:6:hw_enable_zcd	1
+../Core/Src/hardware_interface.c:48:6:hw_state_high_current_switch	1
+../Core/Src/hardware_interface.c:57:6:hw_state_zcd	1
+../Core/Src/hardware_interface.c:66:6:hw_disable_power_stage	1
+../Core/Src/hardware_interface.c:73:6:hw_mach_loaded	1
+../Core/Src/hardware_interface.c:80:6:hw_mach_clear_fault	1
+../Core/Src/hardware_interface.c:86:6:hw_get_mach_fault_a	1
+../Core/Src/hardware_interface.c:92:6:hw_get_mach_fault_b	1
+../Core/Src/hardware_interface.c:98:6:hw_get_thw_a	1
+../Core/Src/hardware_interface.c:104:6:hw_get_thw_b	1

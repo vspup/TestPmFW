@@ -1,0 +1,12 @@
+../Core/Src/uart-escape.c:7:6:uart_escape_reset	1
+../Core/Src/uart-escape.c:19:6:uart_escape_byte_in	9
+../Core/Src/uart-escape.c:60:21:uart_escape_decode_byte	10
+../Core/Src/uart-escape.c:109:6:uart_escape_reset_encoder	1
+../Core/Src/uart-escape.c:113:10:uart_escape_encode_byte	3
+../Core/Src/uart-escape.c:140:10:uart_escape_encode	7
+../Core/Src/uart-escape.c:178:6:uart_escape_handle_byte	1
+../Core/Src/uart-escape.c:183:6:uart_escape_handle_invalid	1
+../Core/Src/uart-escape.c:188:6:uart_escape_handle_start	1
+../Core/Src/uart-escape.c:193:6:uart_escape_handle_end	1
+../Core/Src/uart-escape.c:198:6:uart_escape_handle_alarm	1
+../Core/Src/uart-escape.c:204:6:uart_escape_handle_write	1
