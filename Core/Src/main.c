@@ -492,6 +492,8 @@ void CMD_Handler(void)
 	   case SET_A1:
 		   if( getPWM_Val(&setVal))
 		   {
+			   Set_A3_PWM(0);
+			   Set_A2_PWM(0);
 			   Set_A1_PWM(setVal);
 			   sprintf(tempStr,"Set PWM A1 to %d \n", setVal );
 			   SendRsp(tempStr);
@@ -501,6 +503,8 @@ void CMD_Handler(void)
 	   case	SET_A2:
 		   if( getPWM_Val(&setVal))
 		   {
+			   Set_A3_PWM(0);
+			   Set_A1_PWM(0);
 		  	   Set_A2_PWM(setVal);
 		  	   sprintf(tempStr, "Set PWM A2 to %d \n", setVal );
 		  	   SendRsp(tempStr);
@@ -510,6 +514,8 @@ void CMD_Handler(void)
 	   case SET_A3:
 		   if( getPWM_Val(&setVal))
 		   {
+			    Set_A1_PWM(0);
+			    Set_A2_PWM(0);
 		     	Set_A3_PWM(setVal);
 		   		sprintf(tempStr, "Set PWM A3 to %d \n", setVal );
 		   		SendRsp(tempStr);
@@ -518,6 +524,8 @@ void CMD_Handler(void)
 	   case	SET_B1:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Set_B2_PWM(0);
+			    Set_B3_PWM(0);
 			    Set_B1_PWM(setVal);
 		   		sprintf(tempStr, "Set PWM B to %d \n", setVal );
 		   		SendRsp(tempStr);
@@ -526,6 +534,8 @@ void CMD_Handler(void)
 	   case	SET_B2:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Set_B1_PWM(0);
+			  	Set_B3_PWM(0);
 		   		Set_B2_PWM(setVal);
 		   		sprintf(tempStr, "Set PWM B to %d \n", setVal );
 		   		SendRsp(tempStr);
@@ -534,6 +544,8 @@ void CMD_Handler(void)
 	   case	SET_B3:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Set_B1_PWM(0);
+			  	Set_B2_PWM(0);
 		   		Set_B3_PWM(setVal);
 		   		sprintf(tempStr, "Set PWM B to %d \n", setVal );
 		   		SendRsp(tempStr);
