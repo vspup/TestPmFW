@@ -41,13 +41,13 @@ void Set_B1_PWM (uint8_t val)
 
 void Set_B2_PWM (uint8_t val)
 {
-	SET_B1_PWM(val);
+	SET_B2_PWM(val);
 	//On_B2 ();
 }
 
 void Set_B3_PWM (uint8_t val)
 {
-	SET_B1_PWM(val);
+	SET_B3_PWM(val);
 	//On_B3 ();
 }
 
