@@ -807,33 +807,31 @@ void SendReq (void)
 	if(save_param[0])
 	{
 		req.fuseON_OFF = fuse_state[0];
+		save_param[0] = false;
 		req.fuseParamSave = true;
-		//save_param[0] = false;
+
 	}
 
 	if(savePrtCurr[0])
 	{
 		req.fuseProtectionCurrent = protetionCurr[0];
 		savePrtCurr[0] = false;
-		save_param[0] = true;
 		req.fuseParamSave = true;
 	}
 	if(saveTime[0])
 	{
 		req.fuseProtectionTime = protectionTime[0];
 		saveTime[0] = false;
-		save_param[0] = true;
 		req.fuseParamSave = true;
 	}
 
 	msg_len = pm_request_messages_encode(&req, &tx_buf[0], PM_MAX_UART_MSG_LEN);
 	HAL_UART_Transmit(&huart1, (uint8_t*)&tx_buf[0], msg_len, 100);
-	if(save_param[0] == true)
+	if(req.fuseParamSave == true)
 	{
 		HAL_Delay(500);
-		save_param[0] = false;
 	}
-
+	HAL_Delay(50);
 
 	req.fuseRestart = 0;// fuse_set_data[ind].fuseRestart;
 	req.fuseParamSave = 0;//fuse_set_data[ind].fuseParamSave;
@@ -853,33 +851,34 @@ void SendReq (void)
     {
 		req.fuseON_OFF = fuse_state[1];
 		req.fuseParamSave = true;
-		//save_param[1] = false;
+		save_param[1] = false;
 	}
 
 	if(savePrtCurr[1])
 	{
 		req.fuseProtectionCurrent = protetionCurr[1];
 		savePrtCurr[1] = false;
-		save_param[1] = true;
+		req.fuseParamSave = true;
 	}
 	if(saveTime[1])
 	{
-		req.fuseProtectionTime = protectionTime[0];
+		req.fuseProtectionTime = protectionTime[1];
 		saveTime[1] = false;
-		save_param[1] = true;
+		req.fuseParamSave = true;
 	}
 
 	msg_len = pm_request_messages_encode(&req, &tx_buf[0], PM_MAX_UART_MSG_LEN);
-    HAL_UART_Transmit(&huart1, (uint8_t*)&tx_buf[0], msg_len, 100);
+    HAL_UART_Transmit(&huart2, (uint8_t*)&tx_buf[0], msg_len, 100);
 
 	HAL_Delay(50);
-	if(save_param[1] == true)
+	if(req.fuseParamSave == true)
 	{
 		HAL_Delay(500);
-		save_param[1] = false;
+
 	}
-	HAL_UART_Transmit(&huart2, (uint8_t*)&tx_buf[0], msg_len, 100);
-	HAL_Delay(50);
+
+
+
 	struct pm_control control_data;
 	if(switch_state[0])
 	{
