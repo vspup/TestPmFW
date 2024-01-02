@@ -529,7 +529,8 @@ void CMD_Handler(void)
 	   case SET_A1:
 		   if( getPWM_Val(&setVal))
 		   {
-			   Off_A1 ();
+			   Off_A2 ();
+			   Off_A3 ();
 			   Set_A3_PWM(0);
 			   Set_A2_PWM(0);
 			   Set_A1_PWM(setVal);
@@ -543,12 +544,14 @@ void CMD_Handler(void)
 		   if( getPWM_Val(&setVal))
 		   {
 			   Off_A1 ();
+			   Off_A3 ();
 			   Set_A3_PWM(0);
 			   Set_A1_PWM(0);
 		  	   Set_A2_PWM(setVal);
 		  	   sprintf(tempStr, "Set PWM A2 to %d \n", setVal );
 		  	   SendRsp(tempStr);
-		  	   On_A1 ();
+		  	   On_A2 ();
+
 		   }
 	   break;
 
@@ -556,18 +559,20 @@ void CMD_Handler(void)
 		   if( getPWM_Val(&setVal))
 		   {
 			    Off_A1 ();
+			    Off_A2 ();
 			    Set_A1_PWM(0);
 			    Set_A2_PWM(0);
 		     	Set_A3_PWM(setVal);
 		   		sprintf(tempStr, "Set PWM A3 to %d \n", setVal );
 		   		SendRsp(tempStr);
-		   		On_A1 ();
+		   		On_A3 ();
 		   }
 	   break;
 	   case	SET_B1:
 		   if( getPWM_Val(&setVal))
 		    {
-			    Off_B1 ();
+			    Off_B2 ();
+			    Off_B3 ();
 			    Set_B2_PWM(0);
 			    Set_B3_PWM(0);
 			    Set_B1_PWM(setVal);
@@ -580,24 +585,26 @@ void CMD_Handler(void)
 		   if( getPWM_Val(&setVal))
 		    {
 			    Off_B1 ();
+			    Off_B3 ();
 			    Set_B1_PWM(0);
 			  	Set_B3_PWM(0);
 		   		Set_B2_PWM(setVal);
 		   		sprintf(tempStr, "Set PWM B2 to %d \n", setVal );
 		   		SendRsp(tempStr);
-		   		On_B1 ();
+		   		On_B2 ();
 		    }
 	   break;
 	   case	SET_B3:
 		   if( getPWM_Val(&setVal))
 		    {
 			    Off_B1 ();
+			    Off_B2 ();
 			    Set_B1_PWM(0);
 			  	Set_B2_PWM(0);
 		   		Set_B3_PWM(setVal);
 		   		sprintf(tempStr, "Set PWM B3 to %d \n", setVal );
 		   		SendRsp(tempStr);
-		   		On_B1 ();
+		   		On_B3 ();
 		    }
 	   break;
 	   case	ON_A1:
