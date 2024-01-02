@@ -17,38 +17,38 @@ extern  TIM_HandleTypeDef htim3;
  void Set_A1_PWM (uint8_t val)
  {
 	SET_A1_PWM(val);
-	On_A1 ();
+	//On_A1 ();
  }
 
  void Set_A2_PWM (uint8_t val)
  {
 	 SET_A2_PWM(val);
-	 On_A2 ();
+	 //On_A2 ();
  }
 
 
 void Set_A3_PWM (uint8_t val)
 {
 	SET_A3_PWM(val);
-	On_A3 ();
+	//On_A3 ();
 }
 
 void Set_B1_PWM (uint8_t val)
 {
 	SET_B1_PWM(val);
-	On_B1 ();
+	//On_B1 ();
 }
 
 void Set_B2_PWM (uint8_t val)
 {
 	SET_B1_PWM(val);
-	On_B2 ();
+	//On_B2 ();
 }
 
 void Set_B3_PWM (uint8_t val)
 {
 	SET_B1_PWM(val);
-	On_B3 ();
+	//On_B3 ();
 }
 
 void On_A1 (void)

@@ -90,7 +90,7 @@ PUTCHAR_PROTOTYPE
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-#define NUM_CMD    32
+#define NUM_CMD    38
 #define UNK_CMD    NUM_CMD + 1
 #define R_CMD      13
 #define SH_CMD     14
@@ -129,13 +129,20 @@ enum
    ON1,
    ON2,
    OFF1,
-   OFF2
+   OFF2,
+   SET1_I,
+   SET1_T,
+   SET2_I,
+   SET2_T,
+   RESTART1,
+   RESTART2
 };
 const char listCMD[NUM_CMD][10] =
 		{ "pwmA1", "pwmA2", "pwmA3", "pwmB1","pwmB2","pwmB3",
 		  "onA1", "onA2", "onA3", "onB1", "onB2", "onB3",
 		  "offA1", "offA2", "offA3", "offB1", "offB2", "offB3",
-		  "disM1", "disM2","EnM1", "EnM2", "getParam1", "getParam2", "sw1On", "sw2On", "sw1Off", "sw2Off","on1", "on2", "off1", "off2"  };
+		  "disM1", "disM2","EnM1", "EnM2", "getParam1", "getParam2", "sw1On", "sw2On",
+		  "sw1Off", "sw2Off","on1", "on2", "off1", "off2", "set1curr", "set1time","set2curr", "set2time", "restart1", "restart2" };
 typedef struct
 {
 	char rxByte;
@@ -149,7 +156,7 @@ uint8_t numCMD;
 int i;
 
 #define MAX_LEN  10
-uint8_t getVal = 0;
+uint32_t getVal = 0;
 
 uint8_t rxByteM1;
 uint8_t rxByteM2;
@@ -315,6 +322,7 @@ bool switch_state[2] = {false, false};
 bool fuse_state[2] = {false, false};
 bool save_param[2] = {false, false};
 
+
 void ReceiveHandler (void)
 {
     int cnt =0;
@@ -462,7 +470,7 @@ void PrintParam (uint8_t ind)
 	SendRsp(tempStr);
 }
 
-uint8_t getPWM_Val( uint8_t *getPWM_Val)
+uint8_t getPWM_Val( uint32_t *getPWM_Val)
 {
 
   if(getVal > 100)
@@ -475,9 +483,38 @@ uint8_t getPWM_Val( uint8_t *getPWM_Val)
    return 1;
 }
 
+uint8_t getFuse_I( uint32_t *getFuseI_Val)
+{
 
-uint8_t setVal = 0;
+  if(getVal > 50)
+  {
+	  SendRsp("Value must be 0..50 ");
+	  return 0;
+  }
 
+   *getFuseI_Val = getVal;
+   return 1;
+}
+
+uint8_t getFuse_T( uint32_t *getFuseI_Val)
+{
+
+  if(getVal > 1000)
+  {
+	  SendRsp("Value must be 0..1000 ");
+	  return 0;
+  }
+
+   *getFuseI_Val = getVal;
+   return 1;
+}
+
+uint32_t setVal = 0;
+bool savePrtCurr[2] = {false};
+bool saveTime[2] = {false};
+bool restartFuse[2] = {false};
+float protetionCurr [2] = {0};
+float protectionTime[2] = {0};
 
 
 void CMD_Handler(void)
@@ -492,63 +529,75 @@ void CMD_Handler(void)
 	   case SET_A1:
 		   if( getPWM_Val(&setVal))
 		   {
+			   Off_A1 ();
 			   Set_A3_PWM(0);
 			   Set_A2_PWM(0);
 			   Set_A1_PWM(setVal);
 			   sprintf(tempStr,"Set PWM A1 to %d \n", setVal );
 			   SendRsp(tempStr);
+			   On_A1 ();
 		   }
 	   break;
 
 	   case	SET_A2:
 		   if( getPWM_Val(&setVal))
 		   {
+			   Off_A1 ();
 			   Set_A3_PWM(0);
 			   Set_A1_PWM(0);
 		  	   Set_A2_PWM(setVal);
 		  	   sprintf(tempStr, "Set PWM A2 to %d \n", setVal );
 		  	   SendRsp(tempStr);
+		  	   On_A1 ();
 		   }
 	   break;
 
 	   case SET_A3:
 		   if( getPWM_Val(&setVal))
 		   {
+			    Off_A1 ();
 			    Set_A1_PWM(0);
 			    Set_A2_PWM(0);
 		     	Set_A3_PWM(setVal);
 		   		sprintf(tempStr, "Set PWM A3 to %d \n", setVal );
 		   		SendRsp(tempStr);
+		   		On_A1 ();
 		   }
 	   break;
 	   case	SET_B1:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Off_B1 ();
 			    Set_B2_PWM(0);
 			    Set_B3_PWM(0);
 			    Set_B1_PWM(setVal);
-		   		sprintf(tempStr, "Set PWM B to %d \n", setVal );
+		   		sprintf(tempStr, "Set PWM B1 to %d \n", setVal );
 		   		SendRsp(tempStr);
+		   		On_B1 ();
 		    }
 	   break;
 	   case	SET_B2:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Off_B1 ();
 			    Set_B1_PWM(0);
 			  	Set_B3_PWM(0);
 		   		Set_B2_PWM(setVal);
-		   		sprintf(tempStr, "Set PWM B to %d \n", setVal );
+		   		sprintf(tempStr, "Set PWM B2 to %d \n", setVal );
 		   		SendRsp(tempStr);
+		   		On_B1 ();
 		    }
 	   break;
 	   case	SET_B3:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Off_B1 ();
 			    Set_B1_PWM(0);
 			  	Set_B2_PWM(0);
 		   		Set_B3_PWM(setVal);
-		   		sprintf(tempStr, "Set PWM B to %d \n", setVal );
+		   		sprintf(tempStr, "Set PWM B3 to %d \n", setVal );
 		   		SendRsp(tempStr);
+		   		On_B1 ();
 		    }
 	   break;
 	   case	ON_A1:
@@ -656,7 +705,53 @@ void CMD_Handler(void)
 		       fuse_state[1] = false;
 		   	   save_param[1] = true;
 	  		   SendRsp("FUSE 2 is OFF");
-	  	   break;
+	   break;
+
+	   case SET1_I:
+		        if( getFuse_I(&setVal))
+		        {
+		        	protetionCurr[0] = setVal;
+		        	savePrtCurr[0] = true;;
+		        	sprintf(tempStr, "Set Protection Current M1  to %d \n",  setVal);
+		        	SendRsp(tempStr);
+		        }
+	   break;
+	   case SET1_T:
+		        if(getFuse_T(&setVal))
+		        {
+		        	protectionTime[0] =  setVal;
+                    saveTime[0] = true;
+                    sprintf(tempStr, "Set Protection Time M1  to %d \n",  setVal);
+                    SendRsp(tempStr);
+		        }
+	   break;
+	   case SET2_I:
+		          if( getFuse_I(&setVal))
+				  {
+				     protetionCurr[1] = setVal;
+				     savePrtCurr[1] = true;
+				     sprintf(tempStr, "Set Protection Current M2  to %d \n",  setVal);
+                     SendRsp(tempStr);
+				  }
+	   break;
+	   case SET2_T:
+		           if(getFuse_T(&setVal))
+		   		   {
+		   		      protectionTime[1] =  setVal;
+		              saveTime[1] = true;
+		              sprintf(tempStr, "Set Protection Time M2  to %d \n",  setVal);
+		              SendRsp(tempStr);
+		   		   }
+
+	   break;
+	   case RESTART1:
+             restartFuse[0] = true;
+             SendRsp("Restart fuse M1");
+	   break;
+	   case RESTART2:
+		     restartFuse[1] = true;
+		     SendRsp("Restart fuse M2");
+	   break;
 	   default:     SendRsp("Wrong CMD"); break;
 	}
 
@@ -696,11 +791,32 @@ void SendReq (void)
 	req.fuseProtectionCurrent = pm_measurements[0].fuseProtectionCurrent;// fuse_set_data[ind].fuseProtectionCurrent;
 	req.fuseProtectionTime = pm_measurements[0].fuseProtectionTime; //fuse_set_data[ind].fuseProtectionTime;
 
-	if(save_param[0] == true)
+	if(restartFuse[0])
+	{
+		req.fuseRestart = true;
+		restartFuse[0] = false;
+	}
+
+	if(save_param[0])
 	{
 		req.fuseON_OFF = fuse_state[0];
 		req.fuseParamSave = true;
 		//save_param[0] = false;
+	}
+
+	if(savePrtCurr[0])
+	{
+		req.fuseProtectionCurrent = protetionCurr[0];
+		savePrtCurr[0] = false;
+		save_param[0] = true;
+		req.fuseParamSave = true;
+	}
+	if(saveTime[0])
+	{
+		req.fuseProtectionTime = protectionTime[0];
+		saveTime[0] = false;
+		save_param[0] = true;
+		req.fuseParamSave = true;
 	}
 
 	msg_len = pm_request_messages_encode(&req, &tx_buf[0], PM_MAX_UART_MSG_LEN);
@@ -710,6 +826,8 @@ void SendReq (void)
 		HAL_Delay(500);
 		save_param[0] = false;
 	}
+
+
 	req.fuseRestart = 0;// fuse_set_data[ind].fuseRestart;
 	req.fuseParamSave = 0;//fuse_set_data[ind].fuseParamSave;
 	req.fuseON_OFF = pm_measurements[1].fuseON_OFF_State; //fuse_set_data[ind].fuseON_OFF;
@@ -717,11 +835,31 @@ void SendReq (void)
 	req.fuseProtectionCurrent = pm_measurements[1].fuseProtectionCurrent;// fuse_set_data[ind].fuseProtectionCurrent;
 	req.fuseProtectionTime = pm_measurements[1].fuseProtectionTime; //fuse_set_data[ind].fuseProtectionTime;
 
+	if(restartFuse[1])
+	{
+		req.fuseRestart = true;
+		restartFuse[1] = false;
+	}
+
+
 	if(save_param[1] == true)
     {
 		req.fuseON_OFF = fuse_state[1];
 		req.fuseParamSave = true;
 		//save_param[1] = false;
+	}
+
+	if(savePrtCurr[1])
+	{
+		req.fuseProtectionCurrent = protetionCurr[1];
+		savePrtCurr[1] = false;
+		save_param[1] = true;
+	}
+	if(saveTime[1])
+	{
+		req.fuseProtectionTime = protectionTime[0];
+		saveTime[1] = false;
+		save_param[1] = true;
 	}
 
 	msg_len = pm_request_messages_encode(&req, &tx_buf[0], PM_MAX_UART_MSG_LEN);
