@@ -26,7 +26,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-
+#include <uart-escape.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -55,11 +58,20 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart2_rx;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
+extern void CountersHandler (void);
+extern  uint8_t rxDataBuf[250];
+extern  uint8_t rxDataBufRd[250];
+extern  uint8_t getPk1;
 
+extern  uint8_t rxDataBuf2[250];
+extern  uint8_t rxDataBufRd2[250];
+extern  uint8_t getPk2;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -185,7 +197,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
-
+   CountersHandler ();
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
@@ -201,12 +213,48 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles DMA1 channel1 global interrupt.
+  */
+void DMA1_Channel1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+  if(getPk1 == false)
+  {
+	  memcpy((uint8_t*)&rxDataBufRd[0], (uint8_t*)&rxDataBuf[0], sizeof(rxDataBufRd));
+	  getPk1 = true;
+  }
+  /* USER CODE END DMA1_Channel1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel2 global interrupt.
+  */
+void DMA1_Channel2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
+  if(getPk2 == false)
+  {
+	  memcpy((uint8_t*)&rxDataBufRd2[0], (uint8_t*)&rxDataBuf2[0], sizeof(rxDataBufRd2));
+	  getPk2 = true;
+  }
+  /* USER CODE END DMA1_Channel2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart2_rx);
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel2_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART1 global interrupt / USART1 wake-up interrupt through EXTI line 25.
   */
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-
+  //uart_escape_byte_in((uint8_t)(huart1.Instance->RDR));
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
@@ -220,7 +268,7 @@ void USART1_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
-
+  //uart_escape_byte_in((uint8_t)(huart2.Instance->RDR));
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */

@@ -22,6 +22,15 @@ struct Measurements{
 	float T_NTC_B;
 	/// Temperature of Microcontroller in °C
 	float T_UC;
+
+	bool  fuseON_OFF_State;
+	bool  fuseON_ProtectionState;
+	bool  fuseEnabled;
+	float fuseProtectionCurrent;
+	float fuseProtectionTime;
+	float moduleCurrent;
+	uint32_t id_uc;
+
 };
 
 struct pm_control{

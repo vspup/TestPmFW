@@ -99,13 +99,20 @@ enum INTERFACE_STATUS pm_measurement_decode(struct Measurements *m, cw_unpack_co
 		return INTERFACE_STATUS_GENERIC_ERROR;
 	}
 	
-	cw_unpack_next_float(context_p, &m->T_UC);
-	cw_unpack_next_float(context_p, &m->T_NTC_A);
-	cw_unpack_next_float(context_p, &m->T_NTC_B);
-	cw_unpack_next_float(context_p, &m->V_HB_1);
-	cw_unpack_next_float(context_p, &m->V_OUT_A);
-	cw_unpack_next_float(context_p, &m->V_OUT_B);
-	
+	 cw_unpack_next_float(context_p, &m->T_UC);
+	 cw_unpack_next_float(context_p, &m->T_NTC_A);
+	 cw_unpack_next_float(context_p, &m->T_NTC_B );
+	 cw_unpack_next_float(context_p, &m->V_HB_1 );
+	 cw_unpack_next_float(context_p, &m->V_OUT_A );
+	 cw_unpack_next_float(context_p, &m->V_OUT_B);
+	 cw_unpack_next_boolean(context_p, &m->fuseON_OFF_State);
+	 cw_unpack_next_boolean(context_p, &m->fuseON_ProtectionState);
+	 cw_unpack_next_boolean(context_p, &m->fuseEnabled);
+	 cw_unpack_next_float(context_p, &m->fuseProtectionCurrent);
+	 cw_unpack_next_float(context_p, &m->fuseProtectionTime );
+	 cw_unpack_next_float(context_p, &m->moduleCurrent );
+	 cw_unpack_next_unsigned(context_p, (uint64_t*)&m->id_uc );
+
 	if(context_p->return_code != CWP_RC_OK) {
 		return INTERFACE_STATUS_MSG_MALFORMED; 
 	}

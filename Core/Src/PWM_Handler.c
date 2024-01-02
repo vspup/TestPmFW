@@ -8,6 +8,10 @@ extern  TIM_HandleTypeDef htim3;
 #define SET_A2_PWM(x)    TIM1->CCR2 = x
 #define SET_A3_PWM(x)    TIM1->CCR3 = x
 
+#define SET_B1_PWM(x)    TIM3->CCR1 = x
+#define SET_B2_PWM(x)    TIM3->CCR2 = x
+#define SET_B3_PWM(x)    TIM3->CCR3 = x
+
 #define SET_B_PWM(x)     TIM3->CCR1 = x; TIM3->CCR2 = x; TIM3->CCR3 = x;
 
  void Set_A1_PWM (uint8_t val)
@@ -110,20 +114,20 @@ void Off_B3 (void)
 
 void Dis_M1 (void)
 {
-	 HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin, GPIO_PIN_RESET);
+	 HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin, GPIO_PIN_SET);
 }
 
 void Dsi_M2 (void)
 {
-	 HAL_GPIO_WritePin(GPIOA, M2_DIS_Pin, GPIO_PIN_RESET);
+	 HAL_GPIO_WritePin(GPIOA, M2_DIS_Pin, GPIO_PIN_SET);
 }
 
 void En_M1 (void)
 {
-	HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin, GPIO_PIN_RESET);
 }
 
 void En_M2 (void)
 {
-	HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin, GPIO_PIN_RESET);
 }
