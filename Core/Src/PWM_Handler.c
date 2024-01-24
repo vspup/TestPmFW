@@ -129,5 +129,5 @@ void En_M1 (void)
 
 void En_M2 (void)
 {
-	HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, M2_DIS_Pin, GPIO_PIN_RESET);
 }
