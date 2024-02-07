@@ -529,6 +529,9 @@ void CMD_Handler(void)
 	   case SET_A1:
 		   if( getPWM_Val(&setVal))
 		   {
+			   Dis_M1();
+			   Dis_M2();
+			   HAL_Delay(1);
 			   Off_A2 ();
 			   Off_A3 ();
 			   Set_A3_PWM(0);
@@ -537,12 +540,18 @@ void CMD_Handler(void)
 			   sprintf(tempStr,"Set PWM A1 to %d \n", setVal );
 			   SendRsp(tempStr);
 			   On_A1 ();
+			   HAL_Delay(1);
+			   En_M1();
+			   En_M2();
 		   }
 	   break;
 
 	   case	SET_A2:
 		   if( getPWM_Val(&setVal))
 		   {
+			   Dis_M1();
+			   Dis_M2();
+			   HAL_Delay(1);
 			   Off_A1 ();
 			   Off_A3 ();
 			   Set_A3_PWM(0);
@@ -551,6 +560,9 @@ void CMD_Handler(void)
 		  	   sprintf(tempStr, "Set PWM A2 to %d \n", setVal );
 		  	   SendRsp(tempStr);
 		  	   On_A2 ();
+		  	   HAL_Delay(1);
+		  	   En_M1();
+		  	   En_M2();
 
 		   }
 	   break;
@@ -558,6 +570,9 @@ void CMD_Handler(void)
 	   case SET_A3:
 		   if( getPWM_Val(&setVal))
 		   {
+			    Dis_M1();
+			    Dis_M2();
+			  	HAL_Delay(1);
 			    Off_A1 ();
 			    Off_A2 ();
 			    Set_A1_PWM(0);
@@ -566,11 +581,18 @@ void CMD_Handler(void)
 		   		sprintf(tempStr, "Set PWM A3 to %d \n", setVal );
 		   		SendRsp(tempStr);
 		   		On_A3 ();
+		   		HAL_Delay(1);
+                En_M1();
+		   		En_M2();
 		   }
 	   break;
 	   case	SET_B1:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Dis_M1();
+			    Dis_M2();
+			  	HAL_Delay(1);
+
 			    Off_B2 ();
 			    Off_B3 ();
 			    Set_B2_PWM(0);
@@ -579,11 +601,17 @@ void CMD_Handler(void)
 		   		sprintf(tempStr, "Set PWM B1 to %d \n", setVal );
 		   		SendRsp(tempStr);
 		   		On_B1 ();
+		   		HAL_Delay(1);
+                En_M1();
+		   		En_M2();
 		    }
 	   break;
 	   case	SET_B2:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Dis_M1();
+			  	Dis_M2();
+			  	HAL_Delay(1);
 			    Off_B1 ();
 			    Off_B3 ();
 			    Set_B1_PWM(0);
@@ -592,11 +620,17 @@ void CMD_Handler(void)
 		   		sprintf(tempStr, "Set PWM B2 to %d \n", setVal );
 		   		SendRsp(tempStr);
 		   		On_B2 ();
+		   		HAL_Delay(1);
+                En_M1();
+		   		En_M2();
 		    }
 	   break;
 	   case	SET_B3:
 		   if( getPWM_Val(&setVal))
 		    {
+			    Dis_M1();
+			  	Dis_M2();
+			  	HAL_Delay(1);
 			    Off_B1 ();
 			    Off_B2 ();
 			    Set_B1_PWM(0);
@@ -605,27 +639,34 @@ void CMD_Handler(void)
 		   		sprintf(tempStr, "Set PWM B3 to %d \n", setVal );
 		   		SendRsp(tempStr);
 		   		On_B3 ();
+		   		HAL_Delay(1);
+                En_M1();
+		   		En_M2();
 		    }
 	   break;
 	   case	ON_A1:
-		   On_A1();
-		   SendRsp("ON PWM A1");
+
+		    On_A1();
+		    SendRsp("ON PWM A1");
 	   break;
 	   case	ON_A2:
 		   On_A2();
 		   SendRsp("ON PWM A2");
 	   break;
 	   case	ON_A3:
+
 		   On_A3();
 		   SendRsp("ON PWM A3");
 	   break;
 	   case	ON_B1:
 		   On_B1();
 		   SendRsp("ON PWM B1");
+
 	   break;
 	   case	ON_B2:
 	   		On_B2();
 	   		SendRsp("ON PWM B2");
+
 	   break;
 	   case	ON_B3:
 	   	   	On_B3();
@@ -660,7 +701,7 @@ void CMD_Handler(void)
 		   SendRsp("DIS M1");
 	   break;
 	   case DIS_M2:
-		   Dsi_M2();
+		   Dis_M1();
 		   SendRsp("DIS M2");
 	   break;
 	   case EN_M1:

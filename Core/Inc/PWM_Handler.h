@@ -20,7 +20,7 @@ void Off_B1 (void);
 void Off_B2 (void);
 void Off_B3 (void);
 void Dis_M1 (void);
-void Dsi_M2 (void);
+void Dis_M2 (void);
 void En_M1 (void);
 void En_M2 (void);
 

@@ -17,6 +17,6 @@
 ../Core/Src/PWM_Handler.c:105:6:Off_B2	1
 ../Core/Src/PWM_Handler.c:110:6:Off_B3	1
 ../Core/Src/PWM_Handler.c:115:6:Dis_M1	1
-../Core/Src/PWM_Handler.c:120:6:Dsi_M2	1
+../Core/Src/PWM_Handler.c:120:6:Dis_M2	1
 ../Core/Src/PWM_Handler.c:125:6:En_M1	1
 ../Core/Src/PWM_Handler.c:130:6:En_M2	1

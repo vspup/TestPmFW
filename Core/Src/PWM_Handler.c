@@ -117,7 +117,7 @@ void Dis_M1 (void)
 	 HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin, GPIO_PIN_SET);
 }
 
-void Dsi_M2 (void)
+void Dis_M2 (void)
 {
 	 HAL_GPIO_WritePin(GPIOA, M2_DIS_Pin, GPIO_PIN_SET);
 }
