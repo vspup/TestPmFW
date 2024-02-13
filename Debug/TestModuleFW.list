@@ -10922,8 +10922,8 @@ void CMD_Handler(void)
 	   break;
  80070de:	e0fb      	b.n	80072d8 <CMD_Handler+0x5f8>
 	   case DIS_M2:
-		   Dis_M1();
- 80070e0:	f7fa f886 	bl	80011f0 <Dis_M1>
+		   Dis_M2();
+ 80070e0:	f7fa f891 	bl	8001206 <Dis_M2>
 		   SendRsp("DIS M2");
  80070e4:	4888      	ldr	r0, [pc, #544]	; (8007308 <CMD_Handler+0x628>)
  80070e6:	f7ff fc7f 	bl	80069e8 <SendRsp>
@@ -13214,8 +13214,8 @@ static void MX_GPIO_Init(void)
  8007ec4:	687b      	ldr	r3, [r7, #4]
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin|M2_DIS_Pin, GPIO_PIN_RESET);
- 8007ec6:	2200      	movs	r2, #0
+  HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin|M2_DIS_Pin, GPIO_PIN_SET);
+ 8007ec6:	2201      	movs	r2, #1
  8007ec8:	f44f 51c0 	mov.w	r1, #6144	; 0x1800
  8007ecc:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
  8007ed0:	f001 feac 	bl	8009c2c <HAL_GPIO_WritePin>

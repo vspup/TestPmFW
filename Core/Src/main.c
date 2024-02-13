@@ -701,7 +701,7 @@ void CMD_Handler(void)
 		   SendRsp("DIS M1");
 	   break;
 	   case DIS_M2:
-		   Dis_M1();
+		   Dis_M2();
 		   SendRsp("DIS M2");
 	   break;
 	   case EN_M1:
@@ -1529,7 +1529,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin|M2_DIS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, M1_DIS_Pin|M2_DIS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : M1_DIS_Pin M2_DIS_Pin */
   GPIO_InitStruct.Pin = M1_DIS_Pin|M2_DIS_Pin;
