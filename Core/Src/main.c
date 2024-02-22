@@ -90,7 +90,7 @@ PUTCHAR_PROTOTYPE
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-#define NUM_CMD    38
+#define NUM_CMD    40
 #define UNK_CMD    NUM_CMD + 1
 #define R_CMD      13
 #define SH_CMD     14
@@ -135,14 +135,17 @@ enum
    SET2_I,
    SET2_T,
    RESTART1,
-   RESTART2
+   RESTART2,
+   EN1_FUSE,
+   EN2_FUSE
 };
 const char listCMD[NUM_CMD][10] =
 		{ "pwmA1", "pwmA2", "pwmA3", "pwmB1","pwmB2","pwmB3",
 		  "onA1", "onA2", "onA3", "onB1", "onB2", "onB3",
 		  "offA1", "offA2", "offA3", "offB1", "offB2", "offB3",
 		  "disM1", "disM2","EnM1", "EnM2", "getParam1", "getParam2", "sw1On", "sw2On",
-		  "sw1Off", "sw2Off","on1", "on2", "off1", "off2", "set1curr", "set1time","set2curr", "set2time", "restart1", "restart2" };
+		  "sw1Off", "sw2Off","on1", "on2", "off1", "off2", "set1curr", "set1time","set2curr", "set2time", "restart1", "restart2",
+		  "enFuse1",  "enFuse2"};
 typedef struct
 {
 	char rxByte;
@@ -294,10 +297,23 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	}
 }
 
+uint8_t  startCntUART1 = 0, startCntUART2 =0;
+uint32_t timeOutUART1 = 0, timeOutUART2 = 0;
+
 void CountersHandler (void)
 {
 	M_UART_Data1.timeoutCnt++;
 	M_UART_Data2.timeoutCnt++;
+
+	if(startCntUART1)
+	{
+		timeOutUART1++;
+	}
+
+	if(startCntUART2)
+	{
+		timeOutUART2++;
+	}
 }
 
 #define TIMEOUT_PKT  15
@@ -325,7 +341,40 @@ bool save_param[2] = {false, false};
 
 void ReceiveHandler (void)
 {
-    int cnt =0;
+     int cnt =0;
+
+     if(hdma_usart1_rx.Instance->CNDTR != 0)
+     {
+    	 if(startCntUART1 == 0)
+    	 {
+    		 timeOutUART1 =0;
+    		 startCntUART1 = 1;
+    	 }
+    	 else if(timeOutUART1 > 100)
+         {
+    		 HAL_UART_DMAStop(&huart1);
+    		 HAL_UART_Receive_DMA (&huart1, (uint8_t*)&rxDataBuf[0], 217);
+    		 timeOutUART1 =0;
+    	     startCntUART1 = 0;
+         }
+     }
+
+     if(hdma_usart2_rx.Instance->CNDTR != 0)
+     {
+    	 if(startCntUART2 == 0)
+    	 {
+    		 timeOutUART2 =0;
+    	     startCntUART2 = 1;
+    	 }
+    	 else if(timeOutUART2 > 100)
+    	 {
+    		 HAL_UART_DMAStop(&huart2);
+    		 HAL_UART_Receive_DMA (&huart2, (uint8_t*)&rxDataBuf2[0], 217);
+    		 timeOutUART2 =0;
+    		 startCntUART2 = 0;
+    	 }
+     }
+
 
 	 if(getPk1 == true)// if(M_UART_Data1.timeoutCnt > TIMEOUT_PKT)
 	 {
@@ -453,6 +502,7 @@ void SendRsp( char *str)
 void PrintParam (uint8_t ind)
 {
 	char tempStr[250] = {0x00};
+
 	sprintf(tempStr, " Param%d\n V_HB1 %.2f\n V_OUTA %.2f\n V_OUTB %.2f\n NTC_A %.2f\n NTC_B %.2f\n T_UC %.2f\n fON_OFF_State %d\n ON_PrState %d\n fEnabled: %d\n fProtectionCurrent: %.0f\n fProtectionTime: %.0f\n moduleCurrent: %.2f\n",
 			ind +1,
 			pm_measurements[ind].V_HB_1,
@@ -468,6 +518,8 @@ void PrintParam (uint8_t ind)
 	        pm_measurements[ind].fuseProtectionTime,
         	pm_measurements[ind].moduleCurrent);
 	SendRsp(tempStr);
+	memset((char*)&pm_measurements,0x00, sizeof(pm_measurements));
+
 }
 
 uint8_t getPWM_Val( uint32_t *getPWM_Val)
@@ -512,10 +564,11 @@ uint8_t getFuse_T( uint32_t *getFuseI_Val)
 uint32_t setVal = 0;
 bool savePrtCurr[2] = {false};
 bool saveTime[2] = {false};
+bool saveEn[2] = {false};
 bool restartFuse[2] = {false};
 float protetionCurr [2] = {0};
 float protectionTime[2] = {0};
-
+uint8_t protectionEn[2] = {0};
 
 void CMD_Handler(void)
 {
@@ -792,6 +845,19 @@ void CMD_Handler(void)
 		   		   }
 
 	   break;
+	   case EN1_FUSE:
+		    protectionEn[0] =  1;
+		 	saveEn[0] = true;
+		 	sprintf(tempStr, "Set Protection Enale M1 \n");
+		 	SendRsp(tempStr);
+
+	   break;
+	   case EN2_FUSE:
+		    protectionEn[1] =  1;
+		   	saveEn[1] = true;
+		   	sprintf(tempStr, "Set Protection Enale M2 \n");
+		   	SendRsp(tempStr);
+	   break;
 	   case RESTART1:
              restartFuse[0] = true;
              SendRsp("Restart fuse M1");
@@ -866,6 +932,13 @@ void SendReq (void)
 		req.fuseParamSave = true;
 	}
 
+	if(saveEn[0])
+	{
+		req.fuseEN = saveEn[0];
+		saveEn[0] = false;
+		req.fuseParamSave = true;
+	}
+
 	msg_len = pm_request_messages_encode(&req, &tx_buf[0], PM_MAX_UART_MSG_LEN);
 	HAL_UART_Transmit(&huart1, (uint8_t*)&tx_buf[0], msg_len, 100);
 	if(req.fuseParamSave == true)
@@ -908,6 +981,12 @@ void SendReq (void)
 		req.fuseParamSave = true;
 	}
 
+	if(saveEn[1])
+	{
+		req.fuseEN = saveEn[1];
+		saveEn[1] = false;
+		req.fuseParamSave = true;
+	}
 	msg_len = pm_request_messages_encode(&req, &tx_buf[0], PM_MAX_UART_MSG_LEN);
     HAL_UART_Transmit(&huart2, (uint8_t*)&tx_buf[0], msg_len, 100);
 

@@ -72,6 +72,10 @@ extern  uint8_t getPk1;
 extern  uint8_t rxDataBuf2[250];
 extern  uint8_t rxDataBufRd2[250];
 extern  uint8_t getPk2;
+extern  uint8_t startCntUART1;
+extern  uint8_t startCntUART2;
+extern  uint32_t timeOutUART1;
+extern  uint32_t timeOutUART2;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -222,6 +226,7 @@ void DMA1_Channel1_IRQHandler(void)
   {
 	  memcpy((uint8_t*)&rxDataBufRd[0], (uint8_t*)&rxDataBuf[0], sizeof(rxDataBufRd));
 	  getPk1 = true;
+	  startCntUART1 = 0;
   }
   /* USER CODE END DMA1_Channel1_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart1_rx);
@@ -240,6 +245,7 @@ void DMA1_Channel2_IRQHandler(void)
   {
 	  memcpy((uint8_t*)&rxDataBufRd2[0], (uint8_t*)&rxDataBuf2[0], sizeof(rxDataBufRd2));
 	  getPk2 = true;
+	  startCntUART2 =0;
   }
   /* USER CODE END DMA1_Channel2_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart2_rx);
